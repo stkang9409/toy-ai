@@ -1,10 +1,7 @@
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
 
-
-# load .env
 load_dotenv()
-
 
 def get_openai_api_key():
     return os.environ.get('OPEN_AI_API_KEY')
@@ -12,8 +9,12 @@ def get_openai_api_key():
 
 def get_db_connection_info():
     return {
-        host: os.environ.get('MYSQL_HOST'),
-        user: os.environ.get('MYSQL_USER'),
-        password: os.environ.get('MYSQL_PASSWORD'),
-        database: os.environ.get('MYSQL_DATABASE')
+        "host": os.environ.get('MYSQL_HOST'),
+        "user": os.environ.get('MYSQL_USER'),
+        "password": os.environ.get('MYSQL_PASSWORD'),
+        "database": os.environ.get('MYSQL_DATABASE')
     }
+
+
+def get_flask_secret_key():
+    return os.environ.get('FLASK_SECRET_KEY')

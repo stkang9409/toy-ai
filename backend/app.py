@@ -1,18 +1,33 @@
-
 import logging
+
+from flask import Flask, request, session, jsonify, g
+from dotenv import load_dotenv
+
 from core.dalle.dalle import fetch_image, fetch_image2, translate
-import os
-from common.util.db import get_db_connection, create_image_table, table_exists, insert_image_url
-from flask import Flask, request, session, jsonify
 from core.chatGPT.chatGPT import main, create_book
+from common.config.load_config import get_flask_secret_key
 from common.util.session_user import set_user, get_user
 from common.util.response_type import success_response
-
-import sys
-
+from common.util.dbModule import init_db
 
 
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
+
+    # init singleton db
+    with app.app_context():
+        init_db()
+
+    return app
+
+
+# [Initialize Table and Start App]
+if __name__ == '__main__':
+    app = create_app()
+
+    app.secret_key = get_flask_secret_key()
+    app.run(debug=True, host='0.0.0.0', port=80)
+
 
 @app.route('/<user_UUID>', methods=['GET'])
 def main_page(user_UUID):
@@ -29,29 +44,33 @@ def create_book():
     print(book_content)
     return success_response({"result": {"content": book_content, "picture_url": picture_url}})
 
+
 @app.route('/book/<seq>', methods=['GET'])
 def get_book(seq):
     return success_response({"result": create_book(seq)})
+
 
 @app.route('/dalle', methods=['GET'])
 def dalle():
     resImage = fetch_image2()
     return resImage
+
+
 @app.route('/test')
 def test():
     msg = main()
-    return msg 
+    return msg
 
 # [테스트]
 # @app.route('/db', methods=['GET'])
 # def db_test():
 #     connection = get_db_connection()
 #     cursor = connection.cursor()
-    
+
 #     # Example query: get the MySQL server version
 #     cursor.execute("SELECT VERSION()")
 #     result = cursor.fetchone()
-    
+
 #     connection.close()
 #     return jsonify({"mysql_version": result[0]})
 
@@ -60,17 +79,19 @@ def test():
 #     exists = table_exists(table_name)
 #     return jsonify({"table_name": table_name, "exists": exists})
 
-#[Generate Image] 
-@app.route('/images', methods=['GET','POST'])
+# [Generate Image]
+
+
+@app.route('/images', methods=['GET', 'POST'])
 def add_image():
     if request.method == 'POST':
         data = request.data.decode('utf-8')
-      
+
         if data:
             translateData = translate(data)
             english = translateData.choices[0].message.content
             dalleResponse = fetch_image(english)
-            
+
             korean = translate(dalleResponse["data"][0]['url'])
 
             # return jsonify({'status': 'success', 'message': 'Image URL added successfully', 'image_url':dalleResponse["data"][0]['url']})
@@ -94,11 +115,10 @@ def add_image():
         return jsonify({'images': images})
 
 
-#[Initialize Table and Start App]
-if __name__ == '__main__':
-    create_image_table()
-    app.secret_key = 'secret-key'
-    app.run(debug=True, host='0.0.0.0', port=80)
+@app.teardown_appcontext
+def teardown_db(exception):
+    db = g.pop('db', None)
 
-
-
+    if db is not None:
+        logging.info("Closing database connection")
+        db.close()

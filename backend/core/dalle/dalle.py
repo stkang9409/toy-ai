@@ -1,4 +1,4 @@
-from common.utill.api_key import get_openAI_api_key
+from common.config.load_config import get_openai_api_key
 import openai
 
 #[Image Generate]

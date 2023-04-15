@@ -1,5 +1,5 @@
-from common.utill.api_key import get_openAI_api_key
-from common.utill.session_history import set_history, get_history
+from common.config.load_config import get_openai_api_key
+from common.util.session_history import set_history, get_history
 import openai
 
 
