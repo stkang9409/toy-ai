@@ -332,6 +332,6 @@ fabric.properties
 .history
 .ionide
 
-api_key.py
+common/utill/api_key.py
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,pycharm,macos,flask
