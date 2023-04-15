@@ -2,15 +2,15 @@ import logging
 import os
 import mysql.connector
 
-# MYSQL_HOST = os.environ["MYSQL_HOST"]
-# MYSQL_USER = os.environ["MYSQL_USER"]
-# MYSQL_PASSWORD = os.environ["MYSQL_PASSWORD"]
-# MYSQL_DATABASE = os.environ["MYSQL_DATABASE"]
+MYSQL_HOST = os.environ["MYSQL_HOST"]
+MYSQL_USER = os.environ["MYSQL_USER"]
+MYSQL_PASSWORD = os.environ["MYSQL_PASSWORD"]
+MYSQL_DATABASE = os.environ["MYSQL_DATABASE"]
 
-MYSQL_HOST = 'localhost'
-MYSQL_USER = 'root'
-MYSQL_PASSWORD = 'secret'
-MYSQL_DATABASE = 'mydatabase'
+# MYSQL_HOST = 'localhost'
+# MYSQL_USER = 'root'
+# MYSQL_PASSWORD = 'secret'
+# MYSQL_DATABASE = 'mydatabase'
 
 
 def get_db_connection():

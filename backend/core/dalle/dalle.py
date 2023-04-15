@@ -13,8 +13,19 @@ def fetch_image(text):
 def fetch_image2():
     openai.api_key = get_openAI_api_key()
     dalleResponse2 = openai.Image.create(
-      prompt='a white cat',
+      prompt='나무꾼이 나무를 매우 세게 치다',
       n=2,
       size="1024x1024"
     )
     return dalleResponse2
+
+
+def translate(text):
+  openai.api_key = get_openAI_api_key()
+  translatetext = openai.ChatCompletion.create(
+  model="gpt-3.5-turbo",
+  messages=[
+    {"role": "user", "content": f'Can you translate this into english? {text}'}
+  ]
+  )
+  return translatetext
