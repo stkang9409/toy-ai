@@ -2,17 +2,17 @@ import logging
 import os
 import mysql.connector
 
-# MYSQL_HOST = os.environ["MYSQL_HOST"]
-# MYSQL_USER = os.environ["MYSQL_USER"]
-# MYSQL_PASSWORD = os.environ["MYSQL_PASSWORD"]
-# MYSQL_DATABASE = os.environ["MYSQL_DATABASE"]
+MYSQL_HOST = os.environ["MYSQL_HOST"]
+MYSQL_USER = os.environ["MYSQL_USER"]
+MYSQL_PASSWORD = os.environ["MYSQL_PASSWORD"]
+MYSQL_DATABASE = os.environ["MYSQL_DATABASE"]
 
-MYSQL_HOST = 'localhost'
-MYSQL_USER = 'root'
-MYSQL_PASSWORD = 'secret'
-MYSQL_DATABASE = 'mydatabase'
+# MYSQL_HOST = 'localhost'
+# MYSQL_USER = 'root'
+# MYSQL_PASSWORD = 'secret'
+# MYSQL_DATABASE = 'mydatabase'
 
-
+#[DB Connect]
 def get_db_connection():
     connection = mysql.connector.connect(
         host=MYSQL_HOST,
@@ -22,7 +22,7 @@ def get_db_connection():
     )
     return connection
 
-
+#[Table Initialize]
 def create_image_table():
     try:
         connection = get_db_connection()
@@ -51,7 +51,7 @@ def create_image_table():
     logging.info("Table 'images' created successfully.")
 
 
-
+#[테스트]
 def table_exists(table_name):
     connection = get_db_connection()
     cursor = connection.cursor()
@@ -74,7 +74,7 @@ def table_exists(table_name):
 
     return table_exists
 
-
+#[Image Save]
 def insert_image_url(image_url):
     connection = get_db_connection()
     cursor = connection.cursor()

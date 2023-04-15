@@ -1,6 +1,6 @@
 
 import logging
-from core.dalle.dalle import fetch_image, fetch_image2
+from core.dalle.dalle import fetch_image, fetch_image2, translate
 import os
 from common.utill.db import get_db_connection, create_image_table, table_exists, insert_image_url
 from flask import Flask, request, session, jsonify
@@ -33,13 +33,10 @@ def create_book():
 def get_book(seq):
     return success_response({"result": create_book(seq)})
 
-
 @app.route('/dalle', methods=['GET'])
 def dalle():
     resImage = fetch_image2()
     return resImage
-    
-
 @app.route('/test')
 def test():
     msg = main()
@@ -63,32 +60,45 @@ def test():
 #     exists = table_exists(table_name)
 #     return jsonify({"table_name": table_name, "exists": exists})
 
-
-@app.route('/images', methods=['POST'])
+#[Generate Image] 
+@app.route('/images', methods=['GET','POST'])
 def add_image():
     if request.method == 'POST':
         data = request.data.decode('utf-8')
-        print('[분석] data ########')
-        logging.info(data)
-        print(data)
+      
         if data:
-            dalleResponse = fetch_image(data)
-            print('This is dalleReponse #########')
-            print(dalleResponse,file=sys.stdout)
-            logging.info(dalleResponse)
-            print(dalleResponse["data"][0]['url'])
-            insert_image_url(dalleResponse["data"][0]['url'])
-            return jsonify({'status': 'success', 'message': 'Image URL added successfully', 'image_url':dalleResponse["data"][0]['url']})
+            translateData = translate(data)
+            english = translateData.choices[0].message.content
+            dalleResponse = fetch_image(english)
+            
+            korean = translate(dalleResponse["data"][0]['url'])
+
+            # return jsonify({'status': 'success', 'message': 'Image URL added successfully', 'image_url':dalleResponse["data"][0]['url']})
+            return dalleResponse["data"][0]['url']
         else:
             return jsonify({'status': 'error', 'message': 'Image URL missing from request body'})
-    else:
-        return jsonify({'status': 'error', 'message': 'Invalid request method'})
+    if request.method == 'GET':
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        select_all_query = 'SELECT * FROM images'
+        cursor.execute(select_all_query)
+
+        images = []
+        for (id, image_url) in cursor:
+            images.append({'id': id, 'image_url': image_url})
+
+        cursor.close()
+        connection.close()
+
+        return jsonify({'images': images})
 
 
-
+#[Initialize Table and Start App]
 if __name__ == '__main__':
     create_image_table()
     app.secret_key = 'secret-key'
     app.run(debug=True, host='0.0.0.0', port=80)
+
 
 
