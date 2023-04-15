@@ -27,14 +27,12 @@ def create_image_table():
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
-
         create_table_query = '''
         CREATE TABLE IF NOT EXISTS images (
             id INT AUTO_INCREMENT PRIMARY KEY,
             image_url VARCHAR(255) NOT NULL
         )
         '''
-
         cursor.execute(create_table_query)
         connection.commit()
 
@@ -75,3 +73,17 @@ def table_exists(table_name):
     connection.close()
 
     return table_exists
+
+
+def insert_image_url(image_url):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    insert_query = "INSERT INTO images (image_url) VALUES (%s)"
+    data = (str(image_url),)
+
+    cursor.execute(insert_query, data)
+    connection.commit()
+
+    cursor.close()
+    connection.close()
