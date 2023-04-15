@@ -1,0 +1,35 @@
+# docker-compose.yml
+version: "3.9"
+
+services:
+  app:
+    build: .
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=secret
+      - MYSQL_DATABASE=mydatabase
+    volumes: # Add volumes to your Flask app service
+      - .:/app # Map the current directory (source code) to /app in the container
+      - app-logs:/app/logs # Map a named volume (app-logs) to the /app/logs directory in the container
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: mydatabase
+      # MYSQL_USER: root
+      # MYSQL_PASSWORD: secret
+      MYSQL_ROOT_HOST: "%" # <-- Allow connections from any host
+      MYSQL_AUTH_PLUGIN: "mysql_native_password"
+    volumes: # Add volumes to your MySQL service
+      - db-data2:/var/lib/mysql # Map a named volume (db-data2) to the MySQL data directory
+
+volumes: # Define named volumes
+  db-data2: # Persistent volume for MySQL data
+  app-logs: # Volume for Flask app logs
