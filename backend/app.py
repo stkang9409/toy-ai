@@ -4,6 +4,7 @@ from core.chatGPT.chatGPT import main
 from core.dalle.dalle import fetch_image
 import os
 
+from common.utill.db_connection import get_db_connection
 from common.utill.session_user import set_user, get_user
 from common.utill.response_type import success_response
 
@@ -15,7 +16,7 @@ def main_page(user_UUID):
     set_user(user_UUID)
     return success_response({"user": get_user()})
 
-@app.route('/dalle')
+@app.route('/dalle', methods=['GET'])
 def dalle():
     resImage = fetch_image()
     return resImage
@@ -30,22 +31,8 @@ def test():
     msg = main()
     return msg 
 
-import mysql.connector
 
-MYSQL_HOST = os.environ["MYSQL_HOST"]
-MYSQL_USER = os.environ["MYSQL_USER"]
-MYSQL_PASSWORD = os.environ["MYSQL_PASSWORD"]
-MYSQL_DB = os.environ["MYSQL_DB"]
-def get_db_connection():
-    connection = mysql.connector.connect(
-        host=MYSQL_HOST,
-        user=MYSQL_USER,
-        password=MYSQL_PASSWORD,
-        database=MYSQL_DB
-    )
-    return connection
-
-@app.route('/db')
+@app.route('/db', methods=['GET'])
 def db_test():
     connection = get_db_connection()
     cursor = connection.cursor()
@@ -56,8 +43,6 @@ def db_test():
     
     connection.close()
     return jsonify({"mysql_version": result[0]})
-
-app.run(debug=True, host='0.0.0.0', port=80)
 
 if __name__ == '__main__':
     app.secret_key = 'secret-key'

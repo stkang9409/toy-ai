@@ -1,4 +1,4 @@
-OPEN_AI_API_KEY = "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"
+OPEN_AI_API_KEY = "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"
 
 def get_openAI_api_key():
     print(OPEN_AI_API_KEY)
