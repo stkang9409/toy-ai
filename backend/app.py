@@ -2,11 +2,11 @@
 import logging
 from core.dalle.dalle import fetch_image, fetch_image2, translate
 import os
-from common.utill.db import get_db_connection, create_image_table, table_exists, insert_image_url
+from common.util.db import get_db_connection, create_image_table, table_exists, insert_image_url
 from flask import Flask, request, session, jsonify
 from core.chatGPT.chatGPT import main, create_book
-from common.utill.session_user import set_user, get_user
-from common.utill.response_type import success_response
+from common.util.session_user import set_user, get_user
+from common.util.response_type import success_response
 
 import sys
 
