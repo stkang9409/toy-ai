@@ -4,7 +4,7 @@ from core.chatGPT.chatGPT import main
 from core.dalle.dalle import fetch_image
 import os
 
-from common.utill.db_connection import get_db_connection
+from common.utill.db import get_db_connection, create_image_table, table_exists
 from common.utill.session_user import set_user, get_user
 from common.utill.response_type import success_response
 
@@ -44,7 +44,14 @@ def db_test():
     connection.close()
     return jsonify({"mysql_version": result[0]})
 
+@app.route('/tables/<table_name>', methods=['GET'])
+def check_table(table_name):
+    exists = table_exists(table_name)
+    return jsonify({"table_name": table_name, "exists": exists})
+
+
 if __name__ == '__main__':
+    create_image_table()
     app.secret_key = 'secret-key'
     app.run(debug=True, host='0.0.0.0', port=80)
 
