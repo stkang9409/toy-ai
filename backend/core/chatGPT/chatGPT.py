@@ -3,6 +3,7 @@ import openai
 
 
 def generate_response(prompt, messages_before=None):
+    openai.api_key = get_openAI_api_key()
     if messages_before is None:
         messages_before = []
 
@@ -21,4 +22,5 @@ def generate_response(prompt, messages_before=None):
 
 
 def main():
-    generate_response("안녕하세요?")
+    msg = generate_response("안녕하세요?")
+    return msg
