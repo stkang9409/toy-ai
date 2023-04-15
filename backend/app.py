@@ -1,10 +1,10 @@
-from flask import Flask, request, session, jsonify
+
 import logging
-from core.chatGPT.chatGPT import main
 from core.dalle.dalle import fetch_image, fetch_image2
 import os
-
 from common.utill.db import get_db_connection, create_image_table, table_exists, insert_image_url
+from flask import Flask, request, session, jsonify
+from core.chatGPT.chatGPT import main, book_create
 from common.utill.session_user import set_user, get_user
 from common.utill.response_type import success_response
 import sys
@@ -20,14 +20,16 @@ def main_page(user_UUID):
 
 
 # [테스트]
+@app.route('/book', methods=['POST'])
+def create_book():
+    params = request.get_json()
+    book = params['book']
+    return success_response({"result": book_create(book)})
+
 @app.route('/dalle', methods=['GET'])
 def dalle():
     resImage = fetch_image2()
     return resImage
-# @app.route('/book', methods=['POST'])
-# def create_book():
-#     get_user()
-#     return
     
 
 @app.route('/test')

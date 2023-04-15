@@ -2,15 +2,15 @@ import logging
 import os
 import mysql.connector
 
-MYSQL_HOST = os.environ["MYSQL_HOST"]
-MYSQL_USER = os.environ["MYSQL_USER"]
-MYSQL_PASSWORD = os.environ["MYSQL_PASSWORD"]
-MYSQL_DATABASE = os.environ["MYSQL_DATABASE"]
+# MYSQL_HOST = os.environ["MYSQL_HOST"]
+# MYSQL_USER = os.environ["MYSQL_USER"]
+# MYSQL_PASSWORD = os.environ["MYSQL_PASSWORD"]
+# MYSQL_DATABASE = os.environ["MYSQL_DATABASE"]
 
-# MYSQL_HOST = 'db'
-# MYSQL_USER = 'root'
-# MYSQL_PASSWORD = 'secret'
-# MYSQL_DATABASE = 'mydatabase'
+MYSQL_HOST = 'localhost'
+MYSQL_USER = 'root'
+MYSQL_PASSWORD = 'secret'
+MYSQL_DATABASE = 'mydatabase'
 
 
 def get_db_connection():
@@ -18,36 +18,37 @@ def get_db_connection():
         host=MYSQL_HOST,
         user=MYSQL_USER,
         password=MYSQL_PASSWORD,
-        database=MYSQL_DATABASE
+        database=MYSQL_DATABASE,
     )
     return connection
 
 
 def create_image_table():
-    try:
-        connection = get_db_connection()
-        cursor = connection.cursor()
+    # try:
+    connection = get_db_connection()
+    cursor = connection.cursor()
 
-        create_table_query = '''
-        CREATE TABLE IF NOT EXISTS images (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            image_url VARCHAR(500) NOT NULL
-        )
-        '''
+    create_table_query = '''
+    CREATE TABLE IF NOT EXISTS images (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        image_url VARCHAR(500) NOT NULL
+    )
+    '''
 
-        cursor.execute(create_table_query)
-        connection.commit()
+    cursor.execute(create_table_query)
+    connection.commit()
 
-        logging.info("Table 'images' created.") 
+    logging.info("Table 'images' created.") 
 
-    except mysql.connector.Error as error:
-        logging.info(f"Error creating table: {error}")
+    # except mysql.connector.Error as error:
+    #     logging.info(f"Error creating table: {error}")
+    
 
-    finally:
-        if cursor:
-            cursor.close()
-        if connection:
-            connection.close()
+    # finally:
+    #     if cursor:
+    #         cursor.close()
+    #     if connection:
+    #         connection.close()
 
     logging.info("Table 'images' created successfully.")
 
