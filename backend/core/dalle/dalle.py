@@ -1,6 +1,7 @@
 from common.utill.api_key import get_openAI_api_key
 import openai
 
+#[Image Generate]
 def fetch_image(text):
     openai.api_key = get_openAI_api_key()
     dalleResponse = openai.Image.create(
@@ -10,6 +11,7 @@ def fetch_image(text):
     )
     return dalleResponse
 
+#[테스트]
 def fetch_image2():
     openai.api_key = get_openAI_api_key()
     dalleResponse2 = openai.Image.create(
@@ -19,7 +21,7 @@ def fetch_image2():
     )
     return dalleResponse2
 
-
+#[Korean->English]
 def translate(text):
   openai.api_key = get_openAI_api_key()
   translatetext = openai.ChatCompletion.create(

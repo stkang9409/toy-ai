@@ -25,13 +25,10 @@ def create_book():
     params = request.get_json()
     book = params['book']
     return success_response({"result": book_create(book)})
-
 @app.route('/dalle', methods=['GET'])
 def dalle():
     resImage = fetch_image2()
     return resImage
-
-
 @app.route('/test')
 def test():
     msg = main()
@@ -55,30 +52,18 @@ def test():
 #     exists = table_exists(table_name)
 #     return jsonify({"table_name": table_name, "exists": exists})
 
-
+#[Generate Image] 
 @app.route('/images', methods=['GET','POST'])
 def add_image():
     if request.method == 'POST':
         data = request.data.decode('utf-8')
-        print('[분석] data ########')
-        logging.info(data)
-        print(data)
+      
         if data:
             translateData = translate(data)
             english = translateData.choices[0].message.content
-            print('English########')
-            print(english)
-            logging.info(english)
             dalleResponse = fetch_image(english)
-            print('This is dalleReponse #########')
-            print(dalleResponse,file=sys.stdout)
-            logging.info(dalleResponse)
-            print(dalleResponse["data"][0]['url'])
             
             korean = translate(dalleResponse["data"][0]['url'])
-            print('korean###################')
-            print(korean)
-            logging.info(korean)
 
             # return jsonify({'status': 'success', 'message': 'Image URL added successfully', 'image_url':dalleResponse["data"][0]['url']})
             return dalleResponse["data"][0]['url']
@@ -101,6 +86,7 @@ def add_image():
         return jsonify({'images': images})
 
 
+#[Initialize Table and Start App]
 if __name__ == '__main__':
     create_image_table()
     app.secret_key = 'secret-key'
