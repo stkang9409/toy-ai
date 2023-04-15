@@ -24,31 +24,31 @@ def get_db_connection():
 
 
 def create_image_table():
-    # try:
-    connection = get_db_connection()
-    cursor = connection.cursor()
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
 
-    create_table_query = '''
-    CREATE TABLE IF NOT EXISTS images (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        image_url VARCHAR(255) NOT NULL
-    )
-    '''
+        create_table_query = '''
+        CREATE TABLE IF NOT EXISTS images (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            image_url VARCHAR(255) NOT NULL
+        )
+        '''
 
-    cursor.execute(create_table_query)
-    connection.commit()
+        cursor.execute(create_table_query)
+        connection.commit()
 
-    logging.info("Table 'images' created.") 
+        logging.info("Table 'images' created.") 
 
-    # except mysql.connector.Error as error:
-    #     logging.info(f"Error creating table: {error}")
+    except mysql.connector.Error as error:
+        logging.info(f"Error creating table: {error}")
     
 
-    # finally:
-    #     if cursor:
-    #         cursor.close()
-    #     if connection:
-    #         connection.close()
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
 
     logging.info("Table 'images' created successfully.")
 

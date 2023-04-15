@@ -1,6 +1,9 @@
 from common.utill.api_key import get_openAI_api_key
 import openai
 
+
+
+
 def gpt_response(prompt, messages_before=None):
     openai.api_key = get_openAI_api_key()
     if messages_before is None:
@@ -29,15 +32,24 @@ def set_message_before(bef_message_list, question, answer):
 
 def book_create(book):
     message_list = []
-    set_message_before(message_list, '내가 책을 5번에 이어서 설명해줄게', '좋아요, 기다리고 있겠습니다.')
-    set_message_before(message_list, '첫번째 내용 : 선녀와 나무꾼이 연못에서 만났어', '네, 이해했습니다. 선녀와 나무꾼이 연못에서 만나는 장면은 이야기의 시작입니다. 이들은 서로의 존재를 알게 되고 서로에 대해 궁금해합니다. 이 장면은 새로운 인연이 시작되는 출발점이 되는 중요한 장면입니다.')
-    print(message_list)
     
-    msg = gpt_response('내가 설명한 책의 첫번째 내용이 뭐야?', message_list)
+    start_question = '''
+    아래와같은 요약으로 5번 문단으로 나누어 책을 만들어줘
+    '''+ str(book) + '''
+    각 문단당 50자 이내로 해줘
+    근데 내가 문단을 하나씩 물어볼게
+    첫번째 문단을 행복한 분위기와 우울한 분위기로 옵션을 2개주세요.
+    
+    응답형식은 이렇게해줘
+    {{1.행복한분위기: "", 2.우울한분위기: ""}}
+    '''
+    print(start_question)
+    # {주인공 : [{이름 : 창훈, 상세설명: 나무꾼}, {이름 : 카리나, 상세설명: 선녀}], 요약 : 둘이사랑에 빠지는 얘기를 만들어줘}
+
+    
+    msg = gpt_response(start_question, message_list)
     return msg
     
-
-
 def main():
     msg = gpt_response("안녕하세요?")
     return msg
