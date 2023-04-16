@@ -15,6 +15,7 @@ python 3.9.1
 2. docker기반 mysql 실행
 
 ```bash
+docker rm -f openai_mysql
 docker run -itd --name openai_mysql -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_USER=openai -e MYSQL_PASSWORD=secret -e MYSQL_DATABASE=openai -v {YOUR_PATH}/toy-ai/backend/mysql/initdb.d:/docker-entrypoint-initdb.d -p 3306:3306 mysql:latest
 ```
 
