@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def get_openai_api_key():
-    return os.environ.get('OPEN_AI_API_KEY')
+    return os.environ.get('OPENAI_API_KEY')
 
 
 def get_db_connection_info():

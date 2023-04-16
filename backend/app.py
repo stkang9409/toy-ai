@@ -4,29 +4,17 @@ from flask import Flask, request, session, jsonify, g
 from dotenv import load_dotenv
 
 from core.dalle.dalle import fetch_image, fetch_image2, translate
-from core.chatGPT.chatGPT import main, create_book
+from core.chatGPT.chatGPT import main, gpt_book_start
 from common.config.load_config import get_flask_secret_key
 from common.util.session_user import set_user, get_user
 from common.util.response_type import success_response
 from common.util.dbModule import init_db
 
 
-def create_app():
-    app = Flask(__name__)
-
-    # init singleton db
-    with app.app_context():
-        init_db()
-
-    return app
-
-
-# [Initialize Table and Start App]
-if __name__ == '__main__':
-    app = create_app()
-
-    app.secret_key = get_flask_secret_key()
-    app.run(debug=True, host='0.0.0.0', port=80)
+app = Flask(__name__)
+# init singleton DB connection
+with app.app_context():
+    init_db()
 
 
 @app.route('/<user_UUID>', methods=['GET'])
@@ -39,15 +27,16 @@ def main_page(user_UUID):
 def create_book():
     params = request.get_json()
     book = params['book']
-    book_content = create_book(book, get_user())
-    picture_url = fetch_image(book_content)["data"][0]['url']
+    book_content = gpt_book_start(get_user(), book)
+    # picture_url = fetch_image(book_content)["data"][0]['url']
+    picture_url = None
     print(book_content)
-    return success_response({"result": {"content": book_content, "picture_url": picture_url}})
+    return success_response({"content": book_content, "picture_url": picture_url})
 
 
 @app.route('/book/<seq>', methods=['GET'])
 def get_book(seq):
-    return success_response({"result": create_book(seq)})
+    return success_response({"result": gpt_book_start(seq)})
 
 
 @app.route('/dalle', methods=['GET'])
@@ -122,3 +111,8 @@ def teardown_db(exception):
     if db is not None:
         logging.info("Closing database connection")
         db.close()
+if __name__ == '__main__':
+    # app = create_app()
+
+    app.secret_key = get_flask_secret_key()
+    app.run(debug=True, host='0.0.0.0', port=80)
