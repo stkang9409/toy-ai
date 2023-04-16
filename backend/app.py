@@ -2,7 +2,7 @@ import logging
 
 from flask import Flask, request, g
 
-from core.chatGPT.chatGPT_service import *
+from service.book_service import *
 from common.config.load_config import get_flask_secret_key
 from common.util.session_user import set_user, get_user
 from common.util.response_type import success_response
@@ -39,12 +39,6 @@ def save_user_content_choice(book_id, seq):
     user_candidate_num = params['candidate_num']
     save_next_book_content(book_id, seq, user_candidate_num)
     return success_response({})
-
-@app.route('/test', methods=['GET'])
-def test():
-    msg = main()
-    return success_response({"msg": msg}) 
-
 
 @app.teardown_appcontext
 def teardown_db(exception):

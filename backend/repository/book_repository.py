@@ -5,7 +5,8 @@ def save_book(hero, summary):
     conn = get_conn()
     cursor = conn.cursor()
 
-    cursor.execute("INSERT INTO books (hero, summary) VALUES (%s, %s)", (str(hero), str(summary), ))
+    cursor.execute("INSERT INTO books (hero, summary) VALUES (%s, %s)",
+                   (str(hero), str(summary), ))
     conn.commit()
     book_id = cursor.lastrowid
     cursor.close()
@@ -39,6 +40,7 @@ def save_book_history(book_id, seq, candidate_num, content):
     conn.commit()
     cursor.close()
 
+
 def get_book(book_id):
     conn = get_conn()
     cursor = conn.cursor()
@@ -47,6 +49,7 @@ def get_book(book_id):
     hero, summary = cursor.fetchone()
     cursor.close()
     return hero, summary
+
 
 def get_book_history(book_id, seq, candidate_num):
     conn = get_conn()
@@ -79,6 +82,7 @@ def get_book_detail(book_id, seq):
     content, image_url = cursor.fetchone()
     cursor.close()
     return content, image_url
+
 
 def get_book_details_by_book_id(book_id):
     conn = get_conn()
