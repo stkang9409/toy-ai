@@ -54,4 +54,4 @@ if __name__ == '__main__':
     CORS(app, resource = {r'*': {"origins": ["https://toy-ai-front.vercel.app/","http://localhost:3000/"]}})
 
     app.secret_key = get_flask_secret_key()
-    app.run(debug=True, host='0.0.0.0', port=80)
+    app.run(debug=True, host='0.0.0.0', port=8080)
