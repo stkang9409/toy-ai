@@ -25,7 +25,7 @@ def main_page(user_UUID):
 def create_book():
     params = request.get_json()
     book = params['book']
-    book_id = gpt_book_start(book)
+    book_id = start_book(book)
     return success_response({"book_id": book_id})
 
 @app.route('/book/<book_id>/<seq>', methods=['GET'])
@@ -39,6 +39,12 @@ def save_user_content_choice(book_id, seq):
     user_candidate_num = params['candidate_num']
     save_next_book_content(book_id, seq, user_candidate_num)
     return success_response({})
+
+@app.route('/test', methods=['GET'])
+def test():
+    msg = main()
+    return success_response({"msg": msg}) 
+
 
 @app.teardown_appcontext
 def teardown_db(exception):
