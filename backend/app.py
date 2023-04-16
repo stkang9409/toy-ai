@@ -1,6 +1,7 @@
 import logging
 
 from flask import Flask, request, g
+from flask_cors import CORS
 
 from service.book_service import *
 from common.config.load_config import get_flask_secret_key
@@ -50,6 +51,7 @@ def teardown_db(exception):
 
 if __name__ == '__main__':
     # app = create_app()
+    CORS(app, resource = {r'*': {"origins": ["https://toy-ai-front.vercel.app/","http://localhost:3000/"]}})
 
     app.secret_key = get_flask_secret_key()
     app.run(debug=True, host='0.0.0.0', port=80)
