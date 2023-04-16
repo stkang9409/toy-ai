@@ -1,5 +1,5 @@
 # docker-compose.yml
-version: "3.9"
+version: "3"
 
 services:
   app:
@@ -31,6 +31,7 @@ services:
       # MYSQL_AUTH_PLUGIN: "mysql_native_password"
     volumes: # Add volumes to your MySQL service
       - db-data:/var/lib/mysql # Map a named volume (db-data3) to the MySQL data directory
+      - ./mysql/initdb.d:/docker-entrypoint-initdb.d
  # Map the init.sql file to the MySQL init script
 
 volumes: # Define named volumes
