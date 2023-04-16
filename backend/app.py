@@ -4,7 +4,7 @@ from flask import Flask, request, session, jsonify, g
 from dotenv import load_dotenv
 
 from core.dalle.dalle import fetch_image, fetch_image2, translate
-from core.chatGPT.chatGPT import main, gpt_book_start
+from core.chatGPT.chatGPT_service import *
 from common.config.load_config import get_flask_secret_key
 from common.util.session_user import set_user, get_user
 from common.util.response_type import success_response
@@ -27,16 +27,24 @@ def main_page(user_UUID):
 def create_book():
     params = request.get_json()
     book = params['book']
-    book_content = gpt_book_start(get_user(), book)
-    # picture_url = fetch_image(book_content)["data"][0]['url']
-    picture_url = None
-    print(book_content)
-    return success_response({"content": book_content, "picture_url": picture_url})
+    book_id = gpt_book_start(book)
+    
+    return success_response({"book_id": book_id})
+
+@app.route('/book/<book_id>/<seq>', methods=['GET'])
+def book_content(book_id, seq):
+    return success_response(get_book_content(book_id, seq))
+    # return success_response({"result": gpt_book_start(seq)})
 
 
-@app.route('/book/<seq>', methods=['GET'])
-def get_book(seq):
-    return success_response({"result": gpt_book_start(seq)})
+@app.route('/book/<book_id>/<seq>', methods=['POST'])
+def save_user_content_choice(book_id, seq):
+    params = request.get_json()
+    user_candidate_num = params['candidate_num']
+    save_next_book_content(book_id, seq, user_candidate_num)
+    
+    return "hi"
+    # return success_response({"result": gpt_book_start(seq)})
 
 
 @app.route('/dalle', methods=['GET'])
@@ -111,6 +119,7 @@ def teardown_db(exception):
     if db is not None:
         logging.info("Closing database connection")
         db.close()
+
 if __name__ == '__main__':
     # app = create_app()
 

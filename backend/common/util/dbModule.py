@@ -17,7 +17,7 @@ def init_db():
     )
 
 
-def get_db():
+def get_conn():
     if 'db' not in g:
         g.db = init_db()
     return g.db
